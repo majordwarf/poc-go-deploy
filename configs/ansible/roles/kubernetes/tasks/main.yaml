@@ -1,0 +1,24 @@
+---
+- name: copy kubernetes manifests
+  copy:
+    src: "{{ playbook_dir }}/../kubernetes/"
+    dest: /etc/demo-ops
+    owner: "{{ username }}"
+    mode: 0644
+  # Handle errors if the copy fails
+  failed_when: false
+
+- name: apply namespace.yaml
+  command: kubectl apply -f namespace.yaml
+  args:
+    chdir: /etc/demo-ops/
+
+- name: apply redis.yaml
+  command: kubectl apply -f redis.yaml
+  args:
+    chdir: /etc/demo-ops/
+
+- name: apply app.yaml
+  command: kubectl apply -f app.yaml
+  args:
+    chdir: /etc/demo-ops/

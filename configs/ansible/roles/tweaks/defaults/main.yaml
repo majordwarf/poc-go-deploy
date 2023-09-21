@@ -1,0 +1,16 @@
+---
+sysctl_file: "/etc/sysctl.d/00-custom.conf"
+sysctl_io_config:
+  - token: fs.file-max
+    value: 1000000
+  - token: vm.swappiness
+    value: 10
+sysctl_misc_config:
+  - token: vm.dirty_ratio
+    value: 30
+  - token: vm.dirty_expire_centisecs
+    value: 6000
+  - token: fs.protected_hardlinks
+    value: 1
+  - token: fs.protected_symlinks
+    value: 1

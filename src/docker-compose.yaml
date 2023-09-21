@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    restart: always
+    depends_on:
+      - redis
+    environment:
+      DEMO_REDIS_ADDR: redis:6379
+      DEMO_APP_ADDR: app:8080
+
+  nginx:
+    image: nginx:1.19-alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../configs/nginx/:/etc/nginx/
+    depends_on:
+      - app
+
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - cache:/data
+
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.54.0-alpine
+    restart: always
+    ports:
+      - 9121:9121
+    environment:
+      REDIS_ADDR: "redis:6379"
+    depends_on:
+      - redis
+
+  prometheus:
+    image: prom/prometheus:v2.47.0
+    container_name: prometheus
+    restart: always
+    ports:
+      - 9090:9090
+    volumes:
+      - ../configs/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+
+  grafana:
+    image: grafana/grafana:10.1.2
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ../configs/grafana/datasources:/etc/grafana/provisioning/datasources
+      - ../configs/grafana/dashboards:/var/lib/grafana/dashboards
+      - ../configs/grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/main.yaml
+    depends_on:
+      - prometheus
+
+volumes:
+  cache:
+    driver: local

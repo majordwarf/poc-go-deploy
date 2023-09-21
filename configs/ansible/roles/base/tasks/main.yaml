@@ -1,0 +1,38 @@
+---
+- name: add demo user
+  user:
+    name: "{{ username }}"
+    groups: sudo
+    shell: /bin/bash
+    state: present
+    createhome: yes
+  # Handle errors if the user already exists
+  ignore_errors: true
+  changed_when: false
+
+- name: add the current user to sudo group
+  user:
+    name: "{{ current_user }}"
+    groups: sudo
+    append: yes
+  # Handle errors if the user already exists in the group
+  ignore_errors: true
+  changed_when: false
+
+- name: set the hostname
+  hostname:
+    name: "{{ hostname }}"
+  # Handle errors if the hostname is invalid
+  failed_when: false
+
+- name: set the timezone
+  timezone:
+    name: "{{ timezone }}"
+  # Handle errors if the timezone is invalid
+  failed_when: false
+
+- name: update packages
+  apt:
+    update_cache: yes
+  # Handle errors if the update fails
+  failed_when: false

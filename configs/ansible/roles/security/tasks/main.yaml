@@ -1,0 +1,67 @@
+---
+- name: disable root login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^#?PermitRootLogin"
+    line: "PermitRootLogin no"
+    state: present
+  notify:
+    - restart sshd
+  # Handle errors if the line fails to add
+  failed_when: false
+
+- name: install ufw
+  apt:
+    update_cache: yes
+    name: ["ufw"]
+    state: present
+  # Handle errors if ufw fails to install
+  failed_when: false
+
+- name: deny all incoming connections
+  ufw:
+    default: deny
+    direction: incoming
+  # Handle errors if the rule fails to add
+  failed_when: false
+
+- name: allow ssh
+  ufw:
+    rule: allow
+    port: 22
+  # Handle errors if the rule fails to add
+  failed_when: false
+
+- name: allow prometheus
+  ufw:
+    rule: allow
+    port: 9090
+  # Handle errors if the rule fails to add
+  failed_when: false
+
+- name: allow grafana
+  ufw:
+    rule: allow
+    port: 3000
+  # Handle errors if the rule fails to add
+  failed_when: false
+
+- name: allow http
+  ufw:
+    rule: allow
+    port: 80
+  # Handle errors if the rule fails to add
+  failed_when: false
+
+- name: allow https
+  ufw:
+    rule: allow
+    port: 443
+  # Handle errors if the rule fails to add
+  failed_when: false
+
+- name: enable firewall
+  ufw:
+    state: enabled
+  # Handle errors if the firewall fails to start
+  failed_when: false

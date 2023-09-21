@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: true
+  vars:
+    hostname: "demo-ops"
+    username: "demo"
+    timezone: "Asia/Kolkata"
+    current_user: "vagrant"
+    platform: "{{ lookup('env', 'PLATFORM') }}"
+  roles:
+    - { role: base }
+    - { role: docker, when: platform == "docker" }
+    - { role: security, when: platform == "docker" }
+    - { role: tweaks, when: platform == "docker" }
+    - { role: app, when: platform == "docker" }
+    - { role: kubernetes, when: platform == "kubernetes" }

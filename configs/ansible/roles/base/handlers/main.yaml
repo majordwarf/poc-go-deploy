@@ -1,0 +1,6 @@
+---
+- name: reboot host
+  reboot:
+    msg: "Reboot initiated by Ansible"
+  # Handle errors if the reboot fails
+  failed_when: false

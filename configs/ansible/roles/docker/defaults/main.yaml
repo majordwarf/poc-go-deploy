@@ -1,0 +1,22 @@
+---
+old_packages:
+  - docker
+  - docker-engine
+  - docker.io
+  - containerd
+  - runc
+  - docker-doc
+  - docker-compose
+  - podman-docker
+docker_dependencies:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg
+  - software-properties-common
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin

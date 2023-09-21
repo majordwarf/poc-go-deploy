@@ -1,0 +1,43 @@
+---
+- name: copy application with owner and permissions
+  copy:
+    src: "{{ playbook_dir }}/../../src/"
+    dest: /etc/demo-ops
+    owner: "{{ username }}"
+    mode: 0644
+  # Handle errors if the copy fails
+  failed_when: false
+
+- name: copy nginx configs
+  copy:
+    src: "{{ playbook_dir }}/../nginx/"
+    dest: /etc/configs/nginx
+    owner: "{{ username }}"
+    mode: 0644
+  # Handle errors if the copy fails
+  failed_when: false
+
+- name: copy prometheus configs
+  copy:
+    src: "{{ playbook_dir }}/../prometheus/"
+    dest: /etc/configs/prometheus
+    owner: "{{ username }}"
+    mode: 0644
+  # Handle errors if the copy fails
+  failed_when: false
+
+- name: copy grafana configs
+  copy:
+    src: "{{ playbook_dir }}/../grafana/"
+    dest: /etc/configs/grafana
+    owner: "{{ username }}"
+    mode: 0644
+  # Handle errors if the copy fails
+  failed_when: false
+
+- name: run the application
+  command:
+    chdir: /etc/demo-ops/
+    cmd: docker compose up -d
+  # Handle errors if the command fails
+  failed_when: false

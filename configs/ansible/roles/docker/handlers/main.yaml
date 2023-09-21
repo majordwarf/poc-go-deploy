@@ -1,0 +1,7 @@
+---
+- name: restart docker service
+  service:
+    name: docker
+    state: restarted
+  # Handle errors if the service fails to restart
+  failed_when: false

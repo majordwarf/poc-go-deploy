@@ -1,0 +1,4 @@
+.vagrant
+demo.bin
+cert.pem
+key.pem

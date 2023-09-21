@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+  namespace: demo-ops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-demo-app
+  template:
+    metadata:
+      labels:
+        app: go-demo-app
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/majordwarf/go-demo-app:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DEMO_REDIS_ADDR
+              value: "redis-service:6379"
+            - name: DEMO_APP_ADDR
+              value: "0.0.0.0:8080"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-demo-app-service
+  namespace: demo-ops
+  labels:
+    app: go-demo-app
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30080
+  selector:
+    app: go-demo-app
