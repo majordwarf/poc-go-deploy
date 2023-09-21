@@ -78,8 +78,8 @@ flowchart TD
   H --> I[tweaks];
   I --> J[app]
   J --> Z[Done]
-  K -- Ansible --> L[Base];
-  L --> M[Manifests Deployment];
+  K -- Ansible --> L[base];
+  L --> M[deploy manifests];
   M --> Z
 ```
 
