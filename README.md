@@ -1,4 +1,4 @@
-<h1 align="center">📦 Containerzied Go Application Deployment </h1>
+<h1 align="center">📦 Containerized Go Application Deployment </h1>
 
 ---
 
@@ -10,6 +10,8 @@
 </p>
 
 ---
+
+> TL;DR - Run `init.sh` script and go with the flow. You'll need Ansible, Vagrant, Virtualbox installed on your system.
 
 ## Tooling
 
@@ -65,27 +67,63 @@ Vagrant    - Setting Up Reproducible Development Environment
 ## Pipeline
 
 ```mermaid
-flowchart TD
-  A[Init Script] --> B(Need Cert?);
-  B -- Yes --> C[Generate SSL Cert];
-  B -- No --> D[Deployment Platform?];
-  C --> D;
-  D -- Docker --> E[ubuntu/focal64];
-  D -- Kubernetes --> K[ubuntu/focal64 - minikube];
-  E -- Ansible --> F[base];
-  F --> G[docker];
-  G --> H[security];
-  H --> I[tweaks];
-  I --> J[app]
-  J --> Z[Done]
-  K -- Ansible --> L[base];
-  L --> M[deploy manifests];
+graph TD
+
+subgraph init.sh
+  A[Start]
+  B{Need SSL Certificate?}
+  C(Generate Certificate)
+  D{Deployment Platform?}
+
+  subgraph Vagrant - Docker
+    E(Vagrant Box\nsubuntu/focal64)
+    subgraph Ansible - Docker
+      F(role - base)
+      G(role - docker)
+      H(role - security)
+      I(role - tweak)
+      J(role - app)
+    end
+  end
+
+  subgraph Vagrant - Kubernetes
+    K(Vagrant Box\nilionx/ubuntu2004-minikube)
+    subgraph Ansible - Kubernetes
+      L(role - base)
+      M(role - deploy manifests)
+    end
+  end
+
+  A --> B
+  B -- Yes --> C
+  B -- No --> D
+  C --> D
+
+  D -- Docker --> E
+  E --> F
+  F --> G
+  G --> H
+  H --> I
+  I --> J
+
+  D -- Kubernetes --> K
+  K --> L
+  L --> M
+
   M --> Z
+  J --> Z(End)
+
+end
 ```
 
 ---
 
 ## Setup
+
+> 1. [Init Script](#init-script)
+> 2. [Containerization](#containerization)
+> 3. [Vagrant](#vagrant)
+> 4. [Playbook](#playbook)
 
 ### Init Script
 
@@ -100,7 +138,7 @@ flowchart TD
 
 To use the script, follow these steps:
 
-1. Ensure you have Vagrant and VirtualBox (or a similar provider) installed.
+1. Ensure you have Ansible, Vagrant and VirtualBox installed.
 2. Run the script and follow the prompts to configure SSL certificates and choose a deployment platform.
 
 ### Containerization
