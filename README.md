@@ -141,6 +141,16 @@ To use the script, follow these steps:
 1. Ensure you have Ansible, Vagrant and VirtualBox installed.
 2. Run the script and follow the prompts to configure SSL certificates and choose a deployment platform.
 
+> Sample SSL Certificate Config: <br>
+> <code>Country (C): IN</code> <br>
+> <code>State (ST): Maharashtra</code>  <br>
+> <code>City (L): Mumbai</code>  <br>
+> <code>Company (O): Demo</code>  <br>
+> <code>Department (OU): Finance</code>  <br>
+> <code>Common Name (CN): demodomain.com</code>  <br>
+> <code>Certificate Validity (in days): 10</code> </code>
+
+
 ### Containerization
 
 We are using Docker For building and containerizing our application, while Docker Compose is utilized to orchestrate the application and related services.
