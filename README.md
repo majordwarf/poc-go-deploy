@@ -76,7 +76,7 @@ subgraph init.sh
   D{Deployment Platform?}
 
   subgraph Vagrant - Docker
-    E(Vagrant Box\nsubuntu/focal64)
+    E(Vagrant Box\nubuntu/focal64)
     subgraph Ansible - Docker
       F(role - base)
       G(role - docker)
