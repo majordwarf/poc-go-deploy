@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Define variables
-BOX_NAME="ubuntu/focal64"
 VAGRANT_FILE="Vagrantfile"
 
 # Enable the "errexit" option
@@ -13,6 +12,12 @@ set -e
 
 # Function to check if the Vagrant box is already added
 is_box_added() {
+  if [[ "$PLATFORM" == "docker" ]]; then
+    BOX_NAME="ubuntu/focal64"
+  else
+    BOX_NAME="ilionx/ubuntu2004-minikube"
+  fi
+
   if ! vagrant box list | grep -q "$BOX_NAME"; then
     echo "Vagrant box is missing! Adding the Vagrant box..."
     vagrant box add $BOX_NAME >> /dev/null 2>&1
@@ -86,7 +91,7 @@ echo "Welcome to the automation script!"
 echo "This script will help you to deploy the app on a Vagrant box."
 
 echo "-------------------------------------------------------------------------"
-echo "Do you want to generate SSL certificates for the app [Required first time]? (y/n)"
+echo "Do you want to generate SSL certificates for the app [Required for first time]? (y/n)"
 read -p "Enter your choice (y/n): " choice
 if [[ "$choice" == "y" ]]; then
   generate_ssl
@@ -95,8 +100,6 @@ else
 fi
 
 echo "-------------------------------------------------------------------------"
-# Check if the Vagrant box is already added
-is_box_added
 # Initialize the Vagrant environment if not already initialized
 is_vagrantfile
 
@@ -116,6 +119,8 @@ else
 fi
 
 echo "-------------------------------------------------------------------------"
+# Check if the Vagrant box is already added
+is_box_added
 # Start the Vagrant box
 start_vagrant
 
